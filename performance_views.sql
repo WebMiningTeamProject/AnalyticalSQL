@@ -1,5 +1,10 @@
+--------------------------------------------------------------------------------
+-- The following statements allow to calculate the accuracy.
+
 -- ALTER statements are given to quickly make changes to existing views. 
 -- When setting up a new db you can replace alter by create.
+--------------------------------------------------------------------------------
+
 
 -- SVM
 ALTER VIEW SentimentSVMAccuracy
