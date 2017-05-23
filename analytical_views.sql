@@ -47,8 +47,8 @@ GROUP BY provider.root_name;
 ALTER VIEW average_sentiment_per_cluster_pos_neg
 AS
 SELECT 
-    AVG(sl.pos_neg_sentiment) 'AVG Sentiment',
-    c.cluster_name 'Cluster Name'
+    AVG(sl.pos_neg_sentiment) Sentiment,
+    c.cluster_name Cluster
 FROM
 	NewsArticles a
 	INNER JOIN
