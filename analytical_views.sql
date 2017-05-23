@@ -24,13 +24,15 @@ GROUP BY rp.root_name , c.cluster_name;
 -- average sentiment per provider (sentiment lookup)
 create view average_sentiment_per_provider
 as
-select provider.root_name, (sentiment) Sentiment
+select 
+	provider.root_name, 
+	(sentiment) Sentiment
 from
-NewsArticles articles
-inner join SentimentLookup sl
-on sl.source_uri = articles.source_uri
-inner join NewsProviderComplete provider
-on articles.news_provider = provider.name
+	NewsArticles articles
+	inner join SentimentLookup sl
+	on sl.source_uri = articles.source_uri
+	inner join NewsProviderComplete provider
+	on articles.news_provider = provider.name
 group by provider.root_name;
 
 
