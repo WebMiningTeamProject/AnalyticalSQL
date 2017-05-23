@@ -1,3 +1,9 @@
+--------------------------------------------------------------------------------
+-- The following statements allow to calculate the aggregates.
+
+-- ALTER statements are given to quickly make changes to existing views. 
+-- When setting up a new db you can replace alter by create.
+--------------------------------------------------------------------------------
 
 
 -- aggregate average sentiment per provider by cluster (sentiment lookup)
