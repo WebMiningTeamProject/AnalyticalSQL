@@ -1,12 +1,13 @@
 
 
 -- aggregate average sentiment per provider by cluster (sentiment lookup)
-create view average_sentiment_per_cluster_and_provider
-as
+ALTER VIEW 
+average_sentiment_per_cluster_and_provider_pos_neg
+AS
 SELECT 
-	AVG(sl.sentiment) 'AVG Sentiment',
-	rp.root_name 'Root News Provider',
-	c.cluster_name 'Cluster Name'
+	AVG(sl.pos_neg_sentiment) 'Sentiment',
+	rp.root_name 'Provider',
+	c.cluster_name 'Cluster'
 FROM
 	NewsArticles a
 	INNER JOIN
@@ -20,27 +21,27 @@ FROM
 	Cluster c ON ca.cluster_id = c.cluster_id
 GROUP BY rp.root_name , c.cluster_name;
 
-
 -- average sentiment per provider (sentiment lookup)
-create view average_sentiment_per_provider
-as
-select 
+ALTER VIEW 
+average_sentiment_per_provider_pos_neg
+AS
+SELECT
 	provider.root_name, 
-	(sentiment) Sentiment
-from
+	avg(pos_neg_sentiment) Sentiment
+FROM
 	NewsArticles articles
-	inner join SentimentLookup sl
-	on sl.source_uri = articles.source_uri
-	inner join NewsProviderComplete provider
-	on articles.news_provider = provider.name
-group by provider.root_name;
+	INNER JOIN SentimentLookup sl
+	ON sl.source_uri = articles.source_uri
+	INNER JOIN NewsProviderComplete provider
+	ON articles.news_provider = provider.name
+GROUP BY provider.root_name;
 
 
 -- average sentiment per cluster (sentiment lookup)
-create view average_sentiment_per_cluster
-as
+ALTER VIEW average_sentiment_per_cluster_pos_neg
+AS
 SELECT 
-    AVG(sl.sentiment) 'AVG Sentiment',
+    AVG(sl.pos_neg_sentiment) 'AVG Sentiment',
     c.cluster_name 'Cluster Name'
 FROM
 	NewsArticles a
