@@ -1,6 +1,6 @@
 
 
--- aggregate average sentiment per provider by cluster
+-- aggregate average sentiment per provider by cluster (sentiment lookup)
 SELECT 
     AVG(sl.sentiment) 'AVG Sentiment',
     rp.root_name 'Root News Provider',
@@ -18,3 +18,13 @@ FROM
 	Cluster c ON ca.cluster_id = c.cluster_id
 GROUP BY rp.root_name , c.cluster_name;
 
+
+-- average sentiment per provider (sentiment lookup)
+select provider.root_name, (sentiment) Sentiment
+from
+NewsArticles articles
+inner join SentimentLookup sl
+on sl.source_uri = articles.source_uri
+inner join NewsProviderComplete provider
+on articles.news_provider = provider.name
+group by provider.root_name;
