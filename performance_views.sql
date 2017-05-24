@@ -182,7 +182,7 @@ select
 
 
 -- svm recall
-create view 
+alter view 
 SentimentSVMRecall
 as
 select count(*)/(
@@ -196,7 +196,7 @@ where se.sentiment = st.sentiment
 and se.sentiment = 1;
 
 -- svm recall
-create view 
+alter view 
 SentimentSVMPrecision
 as
 select count(*)/(
@@ -214,7 +214,7 @@ and se.sentiment = 1;
 
 
 -- svm f1
-create view SentimentSVMF1
+alter view SentimentSVMF1
 as
 select 
 (
@@ -238,4 +238,61 @@ select
 	)
 ) as F1;
 
+
+-- bayes recall
+alter view 
+SentimentBayesRecall
+as
+select count(*)/(
+select count(*) from SentimentEvaluation where sentiment = 1
+) 
+as recall
+from SentimentEvaluation se
+INNER JOIN NewsArticlesNaiveBayes_SPSentiment st
+on se.source_uri = st.source_uri
+where se.sentiment = st.sentimentAsNumber
+and se.sentiment = 1;
+
+-- bayes recall
+alter view 
+SentimentBayesPrecision
+as
+select count(*)/(
+	select count(*) 
+    from NewsArticlesNaiveBayes_SPSentiment sl
+    inner join SentimentEvaluation eval
+    on eval.source_uri = sl.source_uri
+    where sl.sentimentAsNumber = 1
+) as prec
+from SentimentEvaluation se
+INNER JOIN NewsArticlesNaiveBayes_SPSentiment st
+on se.source_uri = st.source_uri
+where se.sentiment = st.sentimentAsNumber
+and se.sentiment = 1;
+
+
+-- bayes f1
+alter view SentimentBayesF1
+as
+select 
+(
+	2 * 
+	(
+		select prec from SentimentBayesPrecision
+	)
+	*
+	(
+		select recall from SentimentBayesRecall
+	)
+)
+/
+(
+	(
+		select prec from SentimentBayesPrecision
+	)
+	+
+	(
+		select recall from SentimentBayesRecall
+	)
+) as F1;
 
