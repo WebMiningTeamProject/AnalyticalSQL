@@ -181,3 +181,61 @@ select
 ) as F1;
 
 
+-- svm recall
+create view 
+SentimentSVMRecall
+as
+select count(*)/(
+select count(*) from SentimentEvaluation where sentiment = 1
+) 
+as recall
+from SentimentEvaluation se
+INNER JOIN NewsArticlesLinearSVM_I st
+on se.source_uri = st.source_uri
+where se.sentiment = st.sentiment
+and se.sentiment = 1;
+
+-- svm recall
+create view 
+SentimentSVMPrecision
+as
+select count(*)/(
+	select count(*) 
+    from NewsArticlesLinearSVM_I sl
+    inner join SentimentEvaluation eval
+    on eval.source_uri = sl.source_uri
+    where sl.sentiment = 1
+) as prec
+from SentimentEvaluation se
+INNER JOIN NewsArticlesLinearSVM_I st
+on se.source_uri = st.source_uri
+where se.sentiment = st.sentiment
+and se.sentiment = 1;
+
+
+-- svm f1
+create view SentimentSVMF1
+as
+select 
+(
+	2 * 
+	(
+		select prec from SentimentSVMPrecision
+	)
+	*
+	(
+		select recall from SentimentSVMRecall
+	)
+)
+/
+(
+	(
+		select prec from SentimentSVMPrecision
+	)
+	+
+	(
+		select recall from SentimentSVMRecall
+	)
+) as F1;
+
+
